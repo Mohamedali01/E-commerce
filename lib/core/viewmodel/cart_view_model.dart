@@ -8,6 +8,20 @@ class CartViewModel with ChangeNotifier {
   bool get isLoading => _isLoading;
   List<CartModel> _cartProducts = [];
 
+  List<CartModel> _favourites = [];
+
+
+
+  void addFavourite(CartModel cartModel) {
+    _favourites.add(cartModel);
+    notifyListeners();
+  }
+
+  void removeFavourite(String id) {
+    _favourites.removeWhere((element) => element.cartId == id);
+    notifyListeners();
+  }
+  List<CartModel> get favourites =>_favourites;
   List<CartModel> get cartProducts => _cartProducts;
   CartDatabase database = CartDatabase.db;
 
@@ -55,8 +69,7 @@ class CartViewModel with ChangeNotifier {
   Future<void> incrementQuantity(int index) async {
     _cartProducts[index].quantity++;
     await database.update(_cartProducts[index]);
-    _totalPrice =
-        _totalPrice + (double.parse(_cartProducts[index].price));
+    _totalPrice = _totalPrice + (double.parse(_cartProducts[index].price));
 
     notifyListeners();
   }
@@ -65,8 +78,7 @@ class CartViewModel with ChangeNotifier {
     if (_cartProducts[index].quantity > 0) {
       _cartProducts[index].quantity--;
       await database.update(_cartProducts[index]);
-      _totalPrice =
-          _totalPrice - (double.parse(_cartProducts[index].price));
+      _totalPrice = _totalPrice - (double.parse(_cartProducts[index].price));
 
       notifyListeners();
     }
@@ -77,6 +89,11 @@ class CartViewModel with ChangeNotifier {
       _totalPrice =
           _totalPrice + (double.parse(element.price) * element.quantity);
     });
+    notifyListeners();
+  }
+
+  void removeCartItem(String id) {
+    _cartProducts.removeWhere((element) => element.cartId == id);
     notifyListeners();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:e_commerce/constants.dart';
 import 'package:e_commerce/core/viewmodel/home_view_model.dart';
 import 'package:e_commerce/view/circular_progress_indicator_view.dart';
+import 'package:e_commerce/view/favourite_view.dart';
 import 'package:e_commerce/view/product_details_view.dart';
 import 'package:e_commerce/view/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
@@ -22,10 +23,23 @@ class HomeView extends StatelessWidget {
                   children: [
                     _searchWidget(),
                     SizedBox(height: 30),
-                    CustomText(
-                      text: "Categories",
-                      fontSize: 20,
-                      bold: true,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomText(
+                          text: "Categories",
+                          fontSize: 20,
+                          bold: true,
+                        ),
+                        IconButton(
+                            icon: Image.asset(
+                              'assets/images/Icon_Wishlist.png',
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              Get.to(FavouriteView());
+                            })
+                      ],
                     ),
                     SizedBox(
                       height: 20,

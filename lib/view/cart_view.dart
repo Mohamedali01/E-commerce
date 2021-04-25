@@ -16,6 +16,12 @@ class CartView extends StatelessWidget {
     return Consumer<CartViewModel>(
       builder: (_, controller, child) {
         return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: Image.asset('assets/images/Icon_Arrow-Left.png',width: 20,height: 20,),
+            title: Text('Cart',style: TextStyle(color: Colors.black),),
+          ),
           body: controller.isLoading
               ? CircularProgressIndicatorView()
               : controller.cartProducts.length == 0
@@ -76,8 +82,12 @@ class CartView extends StatelessWidget {
                                     ),
                                   ),
                                   onDismissed: (dismissDirection) {
-                                    // if (dismissDirection == DismissDirection.startToEnd)
-                                    //   if (dismissDirection == DismissDirection.endToStart)
+                                    if (dismissDirection ==
+                                        DismissDirection.endToStart)
+                                      controller.removeCartItem(controller
+                                          .cartProducts[index].cartId);
+                                    if(dismissDirection == DismissDirection.startToEnd)
+                                      controller.addFavourite(controller.cartProducts[index]);
                                   },
                                   key: ValueKey(DateTime.now().toString()),
                                   child: Container(
