@@ -12,7 +12,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:splashscreen/splashscreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,12 +24,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => AddAddressViewModel()),
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => BottomNavigationViewModel()),
         ChangeNotifierProvider(create: (_) => HomeViewModel()),
         ChangeNotifierProvider(create: (_) => CartViewModel()),
         ChangeNotifierProvider(create: (_) => AccountViewModel()),
-        ChangeNotifierProvider(create: (_) => AddAddressViewModel()),
         ChangeNotifierProvider(create: (_) => CheckOutViewModel()),
         ChangeNotifierProvider(create: (_) => DeliveryTimeViewModel()),
       ],
@@ -40,15 +39,7 @@ class MyApp extends StatelessWidget {
         locale: Locale('en'),
         fallbackLocale: Locale('en'),
         debugShowCheckedModeBanner: false,
-        // initialBinding: Binding(),
-        home: SplashScreen(
-          seconds: 5,
-          imageBackground: AssetImage('assets/images/Content.png'),
-          navigateAfterSeconds: new ControlView(),
-          styleTextUnderTheLoader: new TextStyle(),
-          useLoader: false,
-          onClick: () => print("Flutter Egypt"),
-        ),
+        home: ControlView(),
       ),
     );
   }

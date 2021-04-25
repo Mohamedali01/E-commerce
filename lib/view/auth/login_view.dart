@@ -78,8 +78,8 @@ class LoginView extends StatelessWidget {
                               onSaved: (value) {
                                 controller.email = value;
                               },
-                              validator: (value) {
-                                if (value == null)
+                              validator: (String value) {
+                                if (value.isEmpty)
                                   return 'Enter the email!';
                                 else
                                   return null;
@@ -96,8 +96,8 @@ class LoginView extends StatelessWidget {
                             CustomTextFormField(
                               obscure: true,
                               hintText: "*************",
-                              validator: (value) {
-                                if (value == null)
+                              validator: (String value) {
+                                if (value.isEmpty)
                                   return 'Enter the password!';
                                 else
                                   return null;

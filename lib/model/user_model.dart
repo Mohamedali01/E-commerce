@@ -3,8 +3,9 @@ class UserModel {
   String name;
   String email;
   String pic;
+  bool isAdmin;
 
-  UserModel({this.userId, this.name, this.email, this.pic});
+  UserModel({this.userId, this.name, this.email, this.pic, this.isAdmin});
 
   UserModel.fromJson(Map<dynamic, dynamic> map) {
     if (map == null)
@@ -14,10 +15,17 @@ class UserModel {
       name = map['name'];
       email = map['email'];
       pic = map['pic'];
+      isAdmin = map['isAdmin'];
     }
   }
 
-   toJson() {
-    return {'userId': userId, 'name': name, 'email': email, 'pic': pic};
+  toJson() {
+    return {
+      'userId': userId,
+      'name': name,
+      'email': email,
+      'pic': pic,
+      'isAdmin': isAdmin
+    };
   }
 }

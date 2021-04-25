@@ -15,7 +15,10 @@ class AuthViewModel with ChangeNotifier {
   GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
   FacebookLogin _facebookLogin = FacebookLogin();
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  String email, password, name, userId;
+  String email, password, name, userId,pic;
+  bool _isAdmin = false;
+
+  bool get isAdmin => _isAdmin;
 
   bool _isLoading = false;
 
@@ -39,14 +42,16 @@ class AuthViewModel with ChangeNotifier {
     OAuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleSignInAuthentication.idToken,
         accessToken: googleSignInAuthentication.accessToken);
-    _firebaseAuth.signInWithCredential(credential).then((cred) async {
-      await saveData(cred);
-      _isLoading = false;
-      notifyListeners();
+    _firebaseAuth.signInWithCredential(credential).then(
+      (cred) async {
+        await saveData(cred);
+        _isLoading = false;
+        notifyListeners();
 
-      Get.offAll(ControlView());
-      await setWhichLogin(AUTH_GOOGLE);
-    });
+        Get.offAll(ControlView());
+        await setWhichLogin(AUTH_GOOGLE);
+      },
+    );
   }
 
   Future<void> signInFacebookAuth() async {
@@ -84,10 +89,10 @@ class AuthViewModel with ChangeNotifier {
       Get.offAll(ControlView());
     } catch (e) {
       print('Mohamed Ali signInWithEmailAndPass error : ${e.toString()}');
-
       _isLoading = false;
-      Get.snackbar('Error!!', e.toString(),
-          backgroundColor: Colors.red, snackPosition: SnackPosition.BOTTOM);
+      notifyListeners();
+      Get.snackbar('Error!!', 'Invalid authentication',
+          backgroundColor: Colors.red, snackPosition: SnackPosition.TOP);
     }
   }
 
@@ -109,8 +114,10 @@ class AuthViewModel with ChangeNotifier {
       await setWhichLogin(AUTH_EMAIL_AND_PASSWORD);
       Get.offAll(ControlView());
     } catch (e) {
-      Get.snackbar('Error!!', e.toString(),
-          backgroundColor: Colors.red, snackPosition: SnackPosition.BOTTOM);
+      _isLoading = false;
+      notifyListeners();
+      Get.snackbar('Error!!', 'Invalid authentication',
+          backgroundColor: Colors.red, snackPosition: SnackPosition.TOP);
     }
   }
 
@@ -119,7 +126,8 @@ class AuthViewModel with ChangeNotifier {
         email: cred.user.email,
         name: name == null ? cred.user.displayName : name,
         userId: cred.user.uid,
-        pic: '');
+        pic: '',
+        isAdmin: _isAdmin);
     AuthService fireStoreService = AuthService();
     await fireStoreService.addUsersData(userModel);
     await saveDataLocal(userModel);
@@ -139,6 +147,7 @@ class AuthViewModel with ChangeNotifier {
     email = userModel.email;
     name = userModel.name;
     userId = userModel.userId;
+    _isAdmin = userModel.isAdmin;
     notifyListeners();
   }
 
@@ -154,7 +163,12 @@ class AuthViewModel with ChangeNotifier {
   void saveDataAfterLogin(String uid) async {
     AuthService authService = AuthService();
     DocumentSnapshot documentSnapshot = await authService.getUserData(uid);
+
     await saveDataLocal(UserModel.fromJson(documentSnapshot.data()));
   }
 
+  void isAdminChanged(bool value){
+    _isAdmin = value;
+    notifyListeners();
+  }
 }
