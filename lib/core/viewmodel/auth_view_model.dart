@@ -156,4 +156,5 @@ class AuthViewModel with ChangeNotifier {
     DocumentSnapshot documentSnapshot = await authService.getUserData(uid);
     await saveDataLocal(UserModel.fromJson(documentSnapshot.data()));
   }
+
 }

@@ -4,15 +4,14 @@ import 'package:get/get.dart';
 
 class CheckOutViewModel with ChangeNotifier {
   List<bool> _list = [false, false, false];
-  final GlobalKey<FormState> key = GlobalKey<FormState>();
+  GlobalKey<FormState> globalKey = GlobalKey<FormState>();
+
 
   List<bool> get list => _list;
 
   int _currentStep = 0;
 
   int get currentStep => _currentStep;
-
-  String street1, street2, city, state, country;
 
   void goTo(int index) {
     _currentStep = index;
@@ -36,8 +35,8 @@ class CheckOutViewModel with ChangeNotifier {
 
   void continueSteps() {
     if (_currentStep == 1) {
-      if (key.currentState.validate()) {
-        key.currentState.save();
+      if (globalKey.currentState.validate()) {
+        globalKey.currentState.save();
         _list[_currentStep] = true;
 
         _currentStep++;

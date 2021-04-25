@@ -5,13 +5,15 @@ class CustomTextFormField extends StatelessWidget {
   final Function onSaved;
   final String hintText;
   final bool obscure;
+  final String initialValue;
 
   CustomTextFormField(
-      {this.validator, this.onSaved, this.hintText, this.obscure = false});
+      {this.validator, this.onSaved, this.hintText, this.obscure = false,this.initialValue =''});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue,
       validator: validator,
       onSaved: onSaved,
       obscureText: obscure,

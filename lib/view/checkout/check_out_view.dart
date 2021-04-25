@@ -27,61 +27,67 @@ class CheckOutView extends StatelessWidget {
                             {VoidCallback onStepContinue,
                             VoidCallback onStepCancel}) =>
                         Container(
-                          height: 70,
-                          width: MediaQuery.of(context).size.width,
-                          child: Column(
+                      height: 70,
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: controller.currentStep == 0
+                                ? MainAxisAlignment.end
+                                : MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Row(
-                                mainAxisAlignment: controller.currentStep == 0
-                                    ? MainAxisAlignment.end
-                                    : MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  if (controller.currentStep != 0)
-                                    Expanded(
-                                      child: InkWell(
-                                        onTap: controller.cancel,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(color: kPrimaryColor),
-                                          ),
-                                          margin: EdgeInsets.only(right: 20),
-                                          height: 60,
-                                          child: Align(
+                              if (controller.currentStep != 0)
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: controller.cancel,
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: kPrimaryColor),
+                                        ),
+                                        margin: EdgeInsets.only(right: 20),
+                                        height: 60,
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: CustomText(
+                                            text: 'BACK',
                                             alignment: Alignment.center,
-                                            child: CustomText( text: 'BACK',alignment: Alignment.center,fontSize: 18,),)
+                                            fontSize: 18,
                                           ),
+                                        )),
+                                  ),
+                                ),
+                              controller.currentStep == 0
+                                  ? Container(
+                                      width: 150,
+                                      height: 60,
+                                      child: CustomButton(
+                                        text: 'NEXT',
+                                        onPressed: () {
+                                          controller.continueSteps();
+                                        },
+                                      ),
+                                    )
+                                  : Expanded(
+                                      child: Container(
+                                        width: 150,
+                                        height: 60,
+                                        child: CustomButton(
+                                          text: controller.currentStep != 2
+                                              ? 'NEXT'
+                                              : 'Deliver',
+                                          onPressed: () {
+                                            controller.continueSteps();
+                                          },
                                         ),
                                       ),
-
-                                  controller.currentStep == 0
-                                      ? Container(
-                                          width: 150,
-                                          height: 60,
-                                          child: CustomButton(
-                                            text: 'NEXT',
-                                            onPressed: () {
-                                              controller.continueSteps();
-                                            },
-                                          ),
-                                        )
-                                      : Expanded(
-                                          child: Container(
-                                            width: 150,
-                                            height: 60,
-                                            child: CustomButton(
-                                              text: 'NEXT',
-                                              onPressed: () {
-                                                controller.continueSteps();
-                                              },
-                                            ),
-                                          ),
-                                        )
-                                ],
-                              ),
+                                    )
                             ],
                           ),
-                        ),
+                        ],
+                      ),
+                    ),
                     steps: [
                       Step(
                         title: Text('Delivery'),

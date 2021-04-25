@@ -1,3 +1,4 @@
+import 'package:e_commerce/core/viewmodel/add_address_view_model.dart';
 import 'package:e_commerce/core/viewmodel/auth_view_model.dart';
 import 'package:e_commerce/core/viewmodel/bottom_navigation_view_model.dart';
 import 'package:e_commerce/core/viewmodel/cart_view_model.dart';
@@ -11,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:splashscreen/splashscreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,8 +30,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => HomeViewModel()),
         ChangeNotifierProvider(create: (_) => CartViewModel()),
         ChangeNotifierProvider(create: (_) => AccountViewModel()),
+        ChangeNotifierProvider(create: (_) => AddAddressViewModel()),
         ChangeNotifierProvider(create: (_) => CheckOutViewModel()),
-        ChangeNotifierProvider(create: (_) => DeliveryTimeViewModel())
+        ChangeNotifierProvider(create: (_) => DeliveryTimeViewModel()),
       ],
       child: GetMaterialApp(
         theme: ThemeData(fontFamily: 'sans'),
@@ -38,7 +41,14 @@ class MyApp extends StatelessWidget {
         fallbackLocale: Locale('en'),
         debugShowCheckedModeBanner: false,
         // initialBinding: Binding(),
-        home: ControlView(),
+        home: SplashScreen(
+          seconds: 5,
+          imageBackground: AssetImage('assets/images/Content.png'),
+          navigateAfterSeconds: new ControlView(),
+          styleTextUnderTheLoader: new TextStyle(),
+          useLoader: false,
+          onClick: () => print("Flutter Egypt"),
+        ),
       ),
     );
   }

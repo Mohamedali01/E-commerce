@@ -1,4 +1,5 @@
 import 'package:e_commerce/constants.dart';
+import 'package:e_commerce/core/viewmodel/add_address_view_model.dart';
 import 'package:e_commerce/core/viewmodel/cart_view_model.dart';
 import 'package:e_commerce/core/viewmodel/check_out_view_model.dart';
 import 'package:e_commerce/view/widgets/custom_text.dart';
@@ -9,7 +10,7 @@ class SummaryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartController = Provider.of<CartViewModel>(context);
-    final checkOutController = Provider.of<CheckOutViewModel>(context);
+    final addAddressController = Provider.of<AddAddressViewModel>(context);
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.68,
@@ -82,11 +83,11 @@ class SummaryView extends StatelessWidget {
           Container(
             width: MediaQuery.of(context).size.width,
             child: Text(
-              '${checkOutController.street1}, ${checkOutController.street2}, ${checkOutController.city}, ${checkOutController.state}, ${checkOutController.country}',
+              '${addAddressController.street1 == null ? '' : addAddressController.street1 + ','} ${addAddressController.street2 == null ? '' : addAddressController.street2 + ','} ${addAddressController.state == null ? '' : addAddressController.state+','} ${addAddressController.city == null ? '' : addAddressController.city+','} ${addAddressController.country == null ? '' : addAddressController.country+','}',
               style: TextStyle(height: 2, fontSize: 20),
               textAlign: TextAlign.start,
             ),
-          )
+          ),
         ],
       ),
     );

@@ -25,7 +25,7 @@ class CartView extends StatelessWidget {
                         SvgPicture.asset(
                           'assets/images/empty_cart.svg',
                           width: 200,
-                          height: 200,
+                          height: 150,
                         ),
                         SizedBox(
                           height: 20,
@@ -45,95 +45,138 @@ class CartView extends StatelessWidget {
                             child: ListView.separated(
                               itemCount: controller.cartProducts.length,
                               itemBuilder: (_, index) {
-                                return Row(
-                                  children: [
-                                    Container(
-                                      width: 160,
-                                      height: 160,
-                                      child: Image.network(
-                                        controller.cartProducts[index].image,
-                                        fit: BoxFit.fill,
+                                return Dismissible(
+                                  direction: DismissDirection.horizontal,
+                                  background: Container(
+                                    padding: EdgeInsets.only(left: 25),
+                                    color: Color(
+                                      0xffFFC107,
+                                    ),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Image.asset(
+                                        'assets/images/Icon_Wishlist.png',
+                                        width: 25,
+                                        height: 27,
                                       ),
                                     ),
-                                    Container(
-                                      padding: EdgeInsets.only(left: 20),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          CustomText(
-                                            text: controller
-                                                .cartProducts[index].name,
-                                            fontSize: 16,
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          CustomText(
-                                            text:
-                                                '\$ ${controller.cartProducts[index].price}',
-                                            fontSize: 16,
-                                            color: kPrimaryColor,
-                                          ),
-                                          SizedBox(
-                                            height: 20,
-                                          ),
-                                          Container(
-                                            height: 50,
-                                            width: 150,
-                                            decoration: BoxDecoration(
-                                                color: Colors.grey.shade300,
-                                                borderRadius:
-                                                    BorderRadius.circular(7)),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                IconButton(
-                                                  icon: Icon(Icons.add),
-                                                  onPressed: () async {
-                                                    controller
-                                                        .incrementQuantity(
-                                                            index);
-                                                  },
-                                                  color: Colors.black,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                CustomText(
-                                                  text: controller
-                                                      .cartProducts[index]
-                                                      .quantity
-                                                      .toString(),
-                                                  alignment: Alignment.center,
-                                                  fontSize: 16,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 10),
-                                                  child: IconButton(
-                                                    icon: Icon(Icons.minimize),
-                                                    onPressed: () async {
-                                                      controller
-                                                          .decrementQuantity(
-                                                              index);
-                                                    },
-                                                    color: Colors.black,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          )
-                                        ],
+                                  ),
+                                  secondaryBackground: Container(
+                                    padding: EdgeInsets.only(right: 25),
+                                    color: Color(
+                                      0xffFF3D00,
+                                    ),
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Image.asset(
+                                        'assets/images/Icon_Delete.png',
+                                        width: 25,
+                                        height: 27,
                                       ),
-                                    )
-                                  ],
+                                    ),
+                                  ),
+                                  onDismissed: (dismissDirection) {
+                                    // if (dismissDirection == DismissDirection.startToEnd)
+                                    //   if (dismissDirection == DismissDirection.endToStart)
+                                  },
+                                  key: ValueKey(DateTime.now().toString()),
+                                  child: Container(
+                                    height: 120,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 120,
+                                          height: 120,
+                                          child: Image.network(
+                                            controller
+                                                .cartProducts[index].image,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(left: 20),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              CustomText(
+                                                text: controller
+                                                    .cartProducts[index].name,
+                                                fontSize: 16,
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              CustomText(
+                                                text:
+                                                    '\$ ${controller.cartProducts[index].price}',
+                                                fontSize: 16,
+                                                color: kPrimaryColor,
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Container(
+                                                height: 50,
+                                                width: 150,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.grey.shade300,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            7)),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    IconButton(
+                                                      icon: Icon(Icons.add),
+                                                      onPressed: () async {
+                                                        controller
+                                                            .incrementQuantity(
+                                                                index);
+                                                      },
+                                                      color: Colors.black,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    CustomText(
+                                                      text: controller
+                                                          .cartProducts[index]
+                                                          .quantity
+                                                          .toString(),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      fontSize: 16,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 10),
+                                                      child: IconButton(
+                                                        icon: Icon(
+                                                            Icons.minimize),
+                                                        onPressed: () async {
+                                                          controller
+                                                              .decrementQuantity(
+                                                                  index);
+                                                        },
+                                                        color: Colors.black,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                 );
                               },
                               separatorBuilder:

@@ -35,7 +35,7 @@ class ProductDetailsView extends StatelessWidget {
                 children: [
                   CustomText(
                     text: 'Nike Dri-FIT Long Sleeve',
-                    fontSize: 26,
+                    fontSize: 30,
                     bold: true,
                   ),
                   SizedBox(
@@ -103,9 +103,11 @@ class ProductDetailsView extends StatelessWidget {
                     height: 15,
                   ),
                   Expanded(
-                    child: Text(
-                      model.description,
-                      style: TextStyle(height: 2.5),
+                    child: SingleChildScrollView(
+                      child: Text(
+                        model.description,
+                        style: TextStyle(height: 2.5, fontSize: 16),
+                      ),
                     ),
                   ),
                   Container(
@@ -143,7 +145,8 @@ class ProductDetailsView extends StatelessWidget {
                               text: "ADD",
                               fontSize: 20,
                               onPressed: () async {
-                                print('Mohamed Ali: ADD id = '+model.productId);
+                                print(
+                                    'Mohamed Ali: ADD id = ' + model.productId);
                                 await controller.insertCartItem(
                                   CartModel(
                                       cartId: model.productId,
