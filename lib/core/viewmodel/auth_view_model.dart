@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/constants.dart';
 import 'package:e_commerce/core/services/auth_service.dart';
-import 'package:e_commerce/helper/database/localdata/account_local_data.dart';
-import 'package:e_commerce/helper/database/localdata/auth_local_data.dart';
+import 'package:e_commerce/core/services/home_service.dart';
+import 'package:e_commerce/helper/database/cart_database.dart';
+import 'package:e_commerce/helper/database/favourites_database.dart';
+import 'package:e_commerce/helper/database/sharedPref/account_local_data.dart';
+import 'package:e_commerce/helper/database/sharedPref/auth_local_data.dart';
+import 'package:e_commerce/model/cart_model.dart';
 import 'package:e_commerce/model/user_model.dart';
 import 'package:e_commerce/view/control_View/control_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,6 +49,8 @@ class AuthViewModel with ChangeNotifier {
     _firebaseAuth.signInWithCredential(credential).then(
       (cred) async {
         await saveData(cred);
+        await getCartsData();
+        await getFavouritesData();
         _isLoading = false;
         notifyListeners();
 
@@ -66,9 +72,11 @@ class AuthViewModel with ChangeNotifier {
     await _firebaseAuth.signInWithCredential(credential).then((cred) async {
       await saveData(cred);
       await setWhichLogin(AUTH_FACEBOOK);
+      await getCartsData();
+      await getFavouritesData();
+
       _isLoading = false;
       notifyListeners();
-
       Get.offAll(ControlView());
     });
   }
@@ -83,6 +91,9 @@ class AuthViewModel with ChangeNotifier {
       //////////////////////
       saveDataAfterLogin(userCredential.user.uid);
       await setWhichLogin(AUTH_EMAIL_AND_PASSWORD);
+      await getCartsData();
+      await getFavouritesData();
+
       _isLoading = false;
       notifyListeners();
 
@@ -108,9 +119,10 @@ class AuthViewModel with ChangeNotifier {
           await saveData(cred);
         },
       );
+      await getCartsData();
+      await getFavouritesData();
       _isLoading = false;
       notifyListeners();
-
       await setWhichLogin(AUTH_EMAIL_AND_PASSWORD);
       Get.offAll(ControlView());
     } catch (e) {
@@ -131,6 +143,28 @@ class AuthViewModel with ChangeNotifier {
     AuthService fireStoreService = AuthService();
     await fireStoreService.addUsersData(userModel);
     await saveDataLocal(userModel);
+  }
+
+  Future<void> getCartsData()async{
+    HomeService homeService = HomeService();
+  List<QueryDocumentSnapshot> list =await homeService.getCategories();
+ List<CartModel> newList = list.map((e) => CartModel.fromJson(e.data())).toList();
+ CartDatabase cartDatabase = CartDatabase.db;
+for(int i=0;i<newList.length;i++){
+await  cartDatabase.insert(newList[i]);
+notifyListeners();
+}
+  }
+  Future<void> getFavouritesData()async{
+    HomeService homeService = HomeService();
+    List<QueryDocumentSnapshot> list =await homeService.getFavourites();
+    List<CartModel> newList = list.map((e) => CartModel.fromJson(e.data())).toList();
+    FavouritesDatabase favouritesDatabase = FavouritesDatabase.favouritesDatabase;
+    for(int i=0;i<newList.length;i++){
+      await  favouritesDatabase.insert(newList[i]);
+      notifyListeners();
+    }
+
   }
 
   bool isAuth() {

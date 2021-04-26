@@ -10,13 +10,10 @@ class AccountView extends StatefulWidget {
 }
 
 class _AccountViewState extends State<AccountView> {
-  bool _isLoad = false;
-
   @override
   Widget build(BuildContext context) {
-    final accountController =
-        Provider.of<AccountViewModel>(context);
-    return ((accountController.isLoading == true) || (_isLoad == true))
+    final accountController = Provider.of<AccountViewModel>(context);
+    return (accountController.isLoading)
         ? CircularProgressIndicatorView()
         : Scaffold(
             body: SafeArea(
@@ -42,20 +39,33 @@ class _AccountViewState extends State<AccountView> {
                           ),
                           Column(
                             children: [
-                              CustomText(
-                                textOverFlow: true,
-                                text: accountController.userModel.name,
-                                fontSize: 30,
-                                color: Colors.black,
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                child: Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Text(
+                                    accountController.userModel.name,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
                               ),
                               SizedBox(
                                 height: 10,
                               ),
-                              CustomText(
-                                textOverFlow: true,
-                                fontSize: 18,
-                                text: accountController.userModel.email,
-                                color: Colors.black,
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                child: Text(
+                                  accountController.userModel.email,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                  ),
+                                ),
                               ),
                             ],
                           )
@@ -78,13 +88,7 @@ class _AccountViewState extends State<AccountView> {
                         'Log Out',
                         'assets/profileIcons/Icon_Exit.png',
                         onTap: () async {
-                          setState(() {
-                            _isLoad = true;
-                          });
                           await accountController.signOut();
-                          setState(() {
-                            _isLoad = false;
-                          });
                         },
                       ),
                     ],

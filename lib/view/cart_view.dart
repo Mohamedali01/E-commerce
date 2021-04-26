@@ -1,5 +1,6 @@
 import 'package:e_commerce/constants.dart';
 import 'package:e_commerce/core/viewmodel/cart_view_model.dart';
+import 'package:e_commerce/core/viewmodel/favourites_view_model.dart';
 import 'package:e_commerce/view/checkout/check_out_view.dart';
 import 'package:e_commerce/view/widgets/custom_button.dart';
 import 'package:e_commerce/view/widgets/custom_text.dart';
@@ -13,14 +14,19 @@ import 'circular_progress_indicator_view.dart';
 class CartView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final favouritesController = Provider.of<FavouritesViewModel>(context);
     return Consumer<CartViewModel>(
       builder: (_, controller, child) {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            leading: Image.asset('assets/images/Icon_Arrow-Left.png',width: 20,height: 20,),
-            title: Text('Cart',style: TextStyle(color: Colors.black),),
+            title: Center(
+              child: Text(
+                'Cart',
+                style: TextStyle(color: Colors.black, fontSize: 24),
+              ),
+            ),
           ),
           body: controller.isLoading
               ? CircularProgressIndicatorView()
@@ -81,110 +87,120 @@ class CartView extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  onDismissed: (dismissDirection) {
+                                  onDismissed: (dismissDirection) async {
                                     if (dismissDirection ==
                                         DismissDirection.endToStart)
                                       controller.removeCartItem(controller
                                           .cartProducts[index].cartId);
-                                    if(dismissDirection == DismissDirection.startToEnd)
-                                      controller.addFavourite(controller.cartProducts[index]);
+                                    if (dismissDirection ==
+                                        DismissDirection.startToEnd)
+                                      await favouritesController.addFavourite(
+                                          controller.cartProducts[index]);
                                   },
                                   key: ValueKey(DateTime.now().toString()),
-                                  child: Container(
-                                    height: 120,
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 120,
-                                          height: 120,
-                                          child: Image.network(
-                                            controller
-                                                .cartProducts[index].image,
-                                            fit: BoxFit.fill,
+                                  child: InkWell(
+                                    onTap: () {
+                                      controller.pressItem(controller
+                                          .cartProducts[index].cartId);
+                                    },
+                                    child: Container(
+                                      height: 120,
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 120,
+                                            height: 120,
+                                            child: Image.network(
+                                              controller
+                                                  .cartProducts[index].image,
+                                              fit: BoxFit.fill,
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.only(left: 20),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              CustomText(
-                                                text: controller
-                                                    .cartProducts[index].name,
-                                                fontSize: 16,
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              CustomText(
-                                                text:
-                                                    '\$ ${controller.cartProducts[index].price}',
-                                                fontSize: 16,
-                                                color: kPrimaryColor,
-                                              ),
-                                              SizedBox(
-                                                height: 20,
-                                              ),
-                                              Container(
-                                                height: 50,
-                                                width: 150,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.grey.shade300,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            7)),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    IconButton(
-                                                      icon: Icon(Icons.add),
-                                                      onPressed: () async {
-                                                        controller
-                                                            .incrementQuantity(
-                                                                index);
-                                                      },
-                                                      color: Colors.black,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    CustomText(
-                                                      text: controller
-                                                          .cartProducts[index]
-                                                          .quantity
-                                                          .toString(),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      fontSize: 16,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              bottom: 10),
-                                                      child: IconButton(
-                                                        icon: Icon(
-                                                            Icons.minimize),
+                                          Container(
+                                            padding: EdgeInsets.only(left: 20),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                CustomText(
+                                                  text: controller
+                                                      .cartProducts[index].name,
+                                                  fontSize: 16,
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                CustomText(
+                                                  text:
+                                                      '\$ ${controller.cartProducts[index].price}',
+                                                  fontSize: 16,
+                                                  color: kPrimaryColor,
+                                                ),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                Container(
+                                                  height: 50,
+                                                  width: 150,
+                                                  decoration: BoxDecoration(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              7)),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      IconButton(
+                                                        icon: Icon(Icons.add),
                                                         onPressed: () async {
                                                           controller
-                                                              .decrementQuantity(
+                                                              .incrementQuantity(
                                                                   index);
                                                         },
                                                         color: Colors.black,
                                                       ),
-                                                    )
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      ],
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      CustomText(
+                                                        text: controller
+                                                            .cartProducts[index]
+                                                            .quantity
+                                                            .toString(),
+                                                        alignment:
+                                                            Alignment.center,
+                                                        fontSize: 16,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                bottom: 10),
+                                                        child: IconButton(
+                                                          icon: Icon(
+                                                              Icons.minimize),
+                                                          onPressed: () async {
+                                                            controller
+                                                                .decrementQuantity(
+                                                                    index);
+                                                          },
+                                                          color: Colors.black,
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );

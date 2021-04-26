@@ -1,8 +1,7 @@
 import 'package:e_commerce/constants.dart';
-import 'package:e_commerce/helper/database/localdata/account_local_data.dart';
-import 'package:e_commerce/helper/database/localdata/auth_local_data.dart';
+import 'package:e_commerce/helper/database/sharedPref/account_local_data.dart';
+import 'package:e_commerce/helper/database/sharedPref/auth_local_data.dart';
 import 'package:e_commerce/model/user_model.dart';
-import 'package:e_commerce/view/auth/login_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -38,6 +37,8 @@ class AccountViewModel with ChangeNotifier {
 
   Future<void> signOut() async {
     try {
+      _isLoading = true;
+      notifyListeners();
       FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
       String whichLogIn = await getWhichLogin();
       if (whichLogIn == AUTH_GOOGLE) await GoogleSignIn().signOut();
@@ -46,10 +47,12 @@ class AccountViewModel with ChangeNotifier {
       await _authLocalData.deleteWhichLogin();
       AccountLocalData profileLocalData = AccountLocalData();
       await profileLocalData.deleteUserData();
-      Get.offAll(LoginView());
+      _isLoading = false;
+      notifyListeners();
     } catch (e) {
       Get.snackbar('Error!', 'Error happened',
           snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
+      print('Mohamed Ali Error in sign out: ${e.toString()}');
     }
   }
 }

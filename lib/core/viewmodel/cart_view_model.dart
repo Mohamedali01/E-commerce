@@ -1,27 +1,19 @@
+import 'package:e_commerce/core/services/home_service.dart';
 import 'package:e_commerce/helper/database/cart_database.dart';
 import 'package:e_commerce/model/cart_model.dart';
+import 'package:e_commerce/model/product_model.dart';
+import 'package:e_commerce/view/product_details_view.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
 class CartViewModel with ChangeNotifier {
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
   List<CartModel> _cartProducts = [];
+  List<ProductModel> _productModels = [];
 
-  List<CartModel> _favourites = [];
-
-
-
-  void addFavourite(CartModel cartModel) {
-    _favourites.add(cartModel);
-    notifyListeners();
-  }
-
-  void removeFavourite(String id) {
-    _favourites.removeWhere((element) => element.cartId == id);
-    notifyListeners();
-  }
-  List<CartModel> get favourites =>_favourites;
   List<CartModel> get cartProducts => _cartProducts;
   CartDatabase database = CartDatabase.db;
 
@@ -38,15 +30,25 @@ class CartViewModel with ChangeNotifier {
     for (int i = 0; i < _cartProducts.length; i++) {
       if (_cartProducts[i].cartId == cartModel.cartId) {
         find = true;
+        Fluttertoast.showToast(msg: 'Item already exists in the cart');
         return;
       }
     }
     if (find == false) {
-      _cartProducts.add(cartModel);
-      await database.insert(cartModel);
-      _totalPrice =
-          _totalPrice + (double.parse(cartModel.price) * cartModel.quantity);
-      notifyListeners();
+      try {
+        _cartProducts.add(cartModel);
+        await database.insert(cartModel);
+        _totalPrice =
+            _totalPrice + (double.parse(cartModel.price) * cartModel.quantity);
+        notifyListeners();
+        Fluttertoast.showToast(msg: 'Item added to cart successfully!');
+      } catch (e) {
+        Fluttertoast.showToast(msg: 'Error happened!');
+        print('Mohamed Ali insertCartItem error: ${e.toString()}');
+        notifyListeners();
+      }
+      HomeService homeService = HomeService();
+      // await homeService.setCartProducts(cartModel);
     }
   }
 
@@ -92,8 +94,36 @@ class CartViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeCartItem(String id) {
-    _cartProducts.removeWhere((element) => element.cartId == id);
+  Future<void> removeCartItem(String id) async {
+    try {
+      int index = _cartProducts.indexWhere((element) => element.cartId == id);
+      CartModel cM = _cartProducts[index];
+      _cartProducts.removeAt(index);
+      _totalPrice = _totalPrice - (double.parse(cM.price) * cM.quantity);
+      Fluttertoast.showToast(msg: 'Item removed successfully!');
+      notifyListeners();
+      CartDatabase cartDatabase = CartDatabase.db;
+      HomeService homeService = HomeService();
+      await cartDatabase.deleteCartItem(id);
+      // await homeService.deleteCartItem(id);
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Error happened!');
+      notifyListeners();
+    }
+  }
+
+  void pressItem(String id) {
+    ProductModel productModel =
+        _productModels.firstWhere((element) => element.productId == id);
+    Get.to(
+      ProductDetailsView(
+        model: productModel,
+      ),
+    );
+  }
+
+  void update(List<ProductModel> list) {
+    _productModels = list;
     notifyListeners();
   }
 }

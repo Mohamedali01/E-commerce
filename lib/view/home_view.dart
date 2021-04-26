@@ -32,10 +32,7 @@ class HomeView extends StatelessWidget {
                           bold: true,
                         ),
                         IconButton(
-                            icon: Image.asset(
-                              'assets/images/Icon_Wishlist.png',
-                              color: Colors.black,
-                            ),
+                            icon: Icon(Icons.favorite,color: Colors.red,),
                             onPressed: () {
                               Get.to(FavouriteView());
                             })

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce/core/services/home_service.dart';
 import 'package:e_commerce/model/category_model.dart';
 import 'package:e_commerce/model/product_model.dart';
+import 'package:e_commerce/model/user_model.dart';
 import 'package:flutter/material.dart';
 
 class HomeViewModel with ChangeNotifier {

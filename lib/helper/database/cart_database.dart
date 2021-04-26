@@ -21,7 +21,7 @@ class CartDatabase {
 
   Future<Database> initDB() async {
     String path = join(await getDatabasesPath(), 'CartProducts.db');
-    return await openDatabase(path, version: 4, onCreate: (db, _) {
+    return await openDatabase(path, version: 5, onCreate: (db, _) {
       db.execute(
           "CREATE TABLE cart ($columnName TEXT NOT NULL,$columnImage TEXT NOT NULL,$columnPrice TEXT NOT NULL,$columnQuantity INTEGER NOT NULL,$columnId TEXT NOT NULL)");
     });
@@ -44,6 +44,10 @@ class CartDatabase {
     await dbCon.delete(cartTable);
   }
 
+  Future<void> deleteCartItem(String id)async{
+    var dbCon = await database;
+    await dbCon.delete(cartTable,where: '$columnId = ?',whereArgs: [id]);
+  }
   Future<void> update(CartModel cartModel) async {
     var dbCon = await database;
     await dbCon.update(cartTable, cartModel.toJson(),
