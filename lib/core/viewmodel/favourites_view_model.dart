@@ -85,8 +85,13 @@ class FavouritesViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void clearFavourites(){
+    _favourites = [];
+    notifyListeners();
+  }
   void update(List<ProductModel> list) {
     _productModels = list;
     notifyListeners();
   }
+
 }

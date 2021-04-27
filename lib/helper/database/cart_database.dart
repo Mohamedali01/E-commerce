@@ -39,7 +39,7 @@ class CartDatabase {
     return list.map((e) => CartModel.fromJson(e)).toList();
   }
 
-  Future<void> deleteAllCartProducts() async {
+  Future<void> clear() async {
     var dbCon = await database;
     await dbCon.delete(cartTable);
   }

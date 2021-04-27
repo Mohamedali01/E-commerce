@@ -1,12 +1,19 @@
 import 'package:e_commerce/constants.dart';
+import 'package:e_commerce/core/viewmodel/cart_view_model.dart';
+import 'package:e_commerce/helper/database/cart_database.dart';
+import 'package:e_commerce/helper/database/favourites_database.dart';
 import 'package:e_commerce/helper/database/sharedPref/account_local_data.dart';
 import 'package:e_commerce/helper/database/sharedPref/auth_local_data.dart';
 import 'package:e_commerce/model/user_model.dart';
+import 'package:e_commerce/view/auth/login_view.dart';
+import 'package:e_commerce/view/control_View/control_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
+
 
 class AccountViewModel with ChangeNotifier {
   UserModel _userModel;
@@ -41,14 +48,30 @@ class AccountViewModel with ChangeNotifier {
       notifyListeners();
       FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
       String whichLogIn = await getWhichLogin();
-      if (whichLogIn == AUTH_GOOGLE) await GoogleSignIn().signOut();
-      if (whichLogIn == AUTH_FACEBOOK) await FacebookLogin().logOut();
-      await _firebaseAuth.signOut();
       await _authLocalData.deleteWhichLogin();
       AccountLocalData profileLocalData = AccountLocalData();
       await profileLocalData.deleteUserData();
+      print('Mohamed Ali userData deleted');
+      CartDatabase cartDatabase = CartDatabase.db;
+      await cartDatabase.clear();
+      print('Mohamed Ali cart data deleted');
+      FavouritesDatabase favouritesDatabase =
+          FavouritesDatabase.favouritesDatabase;
+      await favouritesDatabase.clear();
+      print('Mohamed Ali favourite data deleted');
+      notifyListeners();
+cartProvider1.clearCartProducts();
+favProvider1.clearFavourites();
+      if (whichLogIn == AUTH_GOOGLE) await GoogleSignIn().signOut();
+      print('Mohamed Ali google');
+      if (whichLogIn == AUTH_FACEBOOK) await FacebookLogin().logOut();
+      print('Mohamed Ali facebook');
+      await _firebaseAuth.signOut();
+      print('Mohamed Ali sign out successfully');
       _isLoading = false;
       notifyListeners();
+      Get.offAll(LoginView());
+
     } catch (e) {
       Get.snackbar('Error!', 'Error happened',
           snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);

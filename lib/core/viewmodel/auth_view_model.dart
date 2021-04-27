@@ -49,11 +49,10 @@ class AuthViewModel with ChangeNotifier {
     _firebaseAuth.signInWithCredential(credential).then(
       (cred) async {
         await saveData(cred);
-        await getCartsData();
-        await getFavouritesData();
+        // await getCartsData();
+        // await getFavouritesData();
         _isLoading = false;
         notifyListeners();
-
         Get.offAll(ControlView());
         await setWhichLogin(AUTH_GOOGLE);
       },
@@ -72,8 +71,8 @@ class AuthViewModel with ChangeNotifier {
     await _firebaseAuth.signInWithCredential(credential).then((cred) async {
       await saveData(cred);
       await setWhichLogin(AUTH_FACEBOOK);
-      await getCartsData();
-      await getFavouritesData();
+      // await getCartsData();
+      // await getFavouritesData();
 
       _isLoading = false;
       notifyListeners();
@@ -91,8 +90,8 @@ class AuthViewModel with ChangeNotifier {
       //////////////////////
       saveDataAfterLogin(userCredential.user.uid);
       await setWhichLogin(AUTH_EMAIL_AND_PASSWORD);
-      await getCartsData();
-      await getFavouritesData();
+      // await getCartsData();
+      // await getFavouritesData();
 
       _isLoading = false;
       notifyListeners();
@@ -119,8 +118,8 @@ class AuthViewModel with ChangeNotifier {
           await saveData(cred);
         },
       );
-      await getCartsData();
-      await getFavouritesData();
+      // await getCartsData();
+      // await getFavouritesData();
       _isLoading = false;
       notifyListeners();
       await setWhichLogin(AUTH_EMAIL_AND_PASSWORD);
@@ -145,27 +144,27 @@ class AuthViewModel with ChangeNotifier {
     await saveDataLocal(userModel);
   }
 
-  Future<void> getCartsData()async{
-    HomeService homeService = HomeService();
-  List<QueryDocumentSnapshot> list =await homeService.getCategories();
- List<CartModel> newList = list.map((e) => CartModel.fromJson(e.data())).toList();
- CartDatabase cartDatabase = CartDatabase.db;
-for(int i=0;i<newList.length;i++){
-await  cartDatabase.insert(newList[i]);
-notifyListeners();
-}
-  }
-  Future<void> getFavouritesData()async{
-    HomeService homeService = HomeService();
-    List<QueryDocumentSnapshot> list =await homeService.getFavourites();
-    List<CartModel> newList = list.map((e) => CartModel.fromJson(e.data())).toList();
-    FavouritesDatabase favouritesDatabase = FavouritesDatabase.favouritesDatabase;
-    for(int i=0;i<newList.length;i++){
-      await  favouritesDatabase.insert(newList[i]);
-      notifyListeners();
-    }
+//   Future<void> getCartsData()async{
+//     HomeService homeService = HomeService();
+//   List<QueryDocumentSnapshot> list =await homeService.getCategories();
+//  List<CartModel> newList = list.map((e) => CartModel.fromJson(e.data())).toList();
+//  CartDatabase cartDatabase = CartDatabase.db;
+// for(int i=0;i<newList.length;i++){
+// await  cartDatabase.insert(newList[i]);
+// notifyListeners();
+// }
+//   }
+  // Future<void> getFavouritesData()async{
+  //   // HomeService homeService = HomeService();
+  //   // List<QueryDocumentSnapshot> list =await homeService.getFavourites();
+  //   List<CartModel> newList = list.map((e) => CartModel.fromJson(e.data())).toList();
+  //   FavouritesDatabase favouritesDatabase = FavouritesDatabase.favouritesDatabase;
+  //   for(int i=0;i<newList.length;i++){
+  //     await  favouritesDatabase.insert(newList[i]);
+  //     notifyListeners();
+  //   }
 
-  }
+  // }
 
   bool isAuth() {
     User user = _firebaseAuth.currentUser;

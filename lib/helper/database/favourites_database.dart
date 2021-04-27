@@ -36,15 +36,22 @@ class FavouritesDatabase {
         .delete(favouriteTable, where: '$favouriteId = ?', whereArgs: [id]);
   }
 
-  // Future<void> update(CartModel cartModel)async{
-  //   Database dbHelper = await database;
-  //   await dbHelper.update(favouriteTable, cartModel.toJson(),where: '$favouriteId = ?',whereArgs: [cartModel.cartId]);
-  //
-  // }
-
   Future<List<CartModel>> query() async {
     Database dbHelper = await database;
     List list = await dbHelper.query(favouriteTable);
     return list.map((e) => CartModel.fromJson(e)).toList();
   }
+  Future<void> clear()async{
+    Database dbHelper = await database;
+    await dbHelper.delete(favouriteTable);
+  }
+
+
+
+// Future<void> update(CartModel cartModel)async{
+//   Database dbHelper = await database;
+//   await dbHelper.update(favouriteTable, cartModel.toJson(),where: '$favouriteId = ?',whereArgs: [cartModel.cartId]);
+//
+// }
+
 }

@@ -1,4 +1,3 @@
-import 'package:e_commerce/core/services/home_service.dart';
 import 'package:e_commerce/helper/database/cart_database.dart';
 import 'package:e_commerce/model/cart_model.dart';
 import 'package:e_commerce/model/product_model.dart';
@@ -25,6 +24,10 @@ class CartViewModel with ChangeNotifier {
     getAllProducts();
   }
 
+  void clearCartProducts(){
+    _cartProducts = [];
+    notifyListeners();
+  }
   Future<void> insertCartItem(CartModel cartModel) async {
     bool find = false;
     for (int i = 0; i < _cartProducts.length; i++) {
@@ -47,7 +50,7 @@ class CartViewModel with ChangeNotifier {
         print('Mohamed Ali insertCartItem error: ${e.toString()}');
         notifyListeners();
       }
-      HomeService homeService = HomeService();
+      // HomeService homeService = HomeService();
       // await homeService.setCartProducts(cartModel);
     }
   }
@@ -63,7 +66,7 @@ class CartViewModel with ChangeNotifier {
   }
 
   Future<void> deleteCartProducts() async {
-    await database.deleteAllCartProducts();
+    await database.clear();
     _cartProducts = [];
     notifyListeners();
   }
@@ -102,10 +105,10 @@ class CartViewModel with ChangeNotifier {
       _totalPrice = _totalPrice - (double.parse(cM.price) * cM.quantity);
       Fluttertoast.showToast(msg: 'Item removed successfully!');
       notifyListeners();
-      CartDatabase cartDatabase = CartDatabase.db;
-      HomeService homeService = HomeService();
-      await cartDatabase.deleteCartItem(id);
-      // await homeService.deleteCartItem(id);
+      // CartDatabase cartDatabase = CartDatabase.db;
+      // HomeService homeService = HomeService();
+      // await cartDatabase.deleteCartItem(id);
+      // // await homeService.deleteCartItem(id);
     } catch (e) {
       Fluttertoast.showToast(msg: 'Error happened!');
       notifyListeners();
