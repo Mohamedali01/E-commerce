@@ -2,6 +2,7 @@ import 'package:e_commerce/core/viewmodel/add_address_view_model.dart';
 import 'package:e_commerce/core/viewmodel/auth_view_model.dart';
 import 'package:e_commerce/core/viewmodel/bottom_navigation_view_model.dart';
 import 'package:e_commerce/core/viewmodel/cart_view_model.dart';
+import 'package:e_commerce/core/viewmodel/category_view_model.dart';
 import 'package:e_commerce/core/viewmodel/check_out_view_model.dart';
 import 'package:e_commerce/core/viewmodel/delivery_time_view_model.dart';
 import 'package:e_commerce/core/viewmodel/favourites_view_model.dart';
@@ -19,6 +20,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -27,18 +29,25 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => BottomNavigationViewModel()),
         ChangeNotifierProvider(create: (_) => HomeViewModel()),
-        ChangeNotifierProxyProvider(create: (_) => CartViewModel(),
-          update: (BuildContext context,HomeViewModel value, CartViewModel previous) {
-          return previous..update(value.productModels);
-        },),
+        ChangeNotifierProxyProvider(
+          create: (_) => CartViewModel(),
+          update: (BuildContext context, HomeViewModel value,
+              CartViewModel previous) {
+            return previous..update(value.productModels);
+          },
+        ),
         ChangeNotifierProvider(create: (_) => AccountViewModel()),
         ChangeNotifierProvider(create: (_) => CheckOutViewModel()),
         ChangeNotifierProvider(create: (_) => DeliveryTimeViewModel()),
         ChangeNotifierProvider(create: (_) => AddAddressViewModel()),
-        ChangeNotifierProxyProvider(create: (_) => FavouritesViewModel(),
-          update: (BuildContext context,HomeViewModel value, FavouritesViewModel previous) {
-          return previous..update(value.productModels);
-          },),
+        ChangeNotifierProxyProvider(
+          create: (_) => FavouritesViewModel(),
+          update: (BuildContext context, HomeViewModel value,
+              FavouritesViewModel previous) {
+            return previous..update(value.productModels);
+          },
+        ),
+        ChangeNotifierProvider(create: (_) => CategoryViewModel())
       ],
       child: GetMaterialApp(
         theme: ThemeData(fontFamily: 'sans'),

@@ -1,5 +1,6 @@
 import 'package:e_commerce/constants.dart';
 import 'package:e_commerce/core/viewmodel/home_view_model.dart';
+import 'package:e_commerce/view/category_view.dart';
 import 'package:e_commerce/view/circular_progress_indicator_view.dart';
 import 'package:e_commerce/view/favourite_view.dart';
 import 'package:e_commerce/view/product_details_view.dart';
@@ -22,7 +23,7 @@ class HomeView extends StatelessWidget {
                 child: Column(
                   children: [
                     _searchWidget(),
-                    SizedBox(height: 30),
+                    SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -31,11 +32,17 @@ class HomeView extends StatelessWidget {
                           fontSize: 20,
                           bold: true,
                         ),
-                        IconButton(
-                            icon: Icon(Icons.favorite,color: Colors.red,),
-                            onPressed: () {
-                              Get.to(FavouriteView());
-                            })
+                        Tooltip(
+                          message: 'Favourites',
+                          child: IconButton(
+                              icon: Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                Get.to(FavouriteView());
+                              }),
+                        )
                       ],
                     ),
                     SizedBox(
@@ -75,7 +82,7 @@ Widget _bestSellingListView(BuildContext context) {
   final controller = Provider.of<HomeViewModel>(context);
 
   return Container(
-    height: 300,
+    height: 340,
     child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemBuilder: (ctx, index) {
@@ -94,7 +101,7 @@ Widget _bestSellingListView(BuildContext context) {
                   ClipRRect(
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.45,
-                      height: 220,
+                      height: 240,
                       child: Image.network(
                         controller.productModels[index].image,
                         fit: BoxFit.fill,
@@ -107,6 +114,7 @@ Widget _bestSellingListView(BuildContext context) {
                   ),
                   CustomText(
                     text: controller.productModels[index].name,
+                    fontSize: 16,
                   ),
                   SizedBox(
                     height: 5,
@@ -114,7 +122,7 @@ Widget _bestSellingListView(BuildContext context) {
                   CustomText(
                     text: controller.productModels[index].description,
                     fontSize: 12,
-                    color: Colors.grey,
+                    color: Colors.grey.shade500,
                     textOverFlow: true,
                   ),
                   SizedBox(
@@ -123,6 +131,7 @@ Widget _bestSellingListView(BuildContext context) {
                   CustomText(
                     text:
                         '\$${controller.productModels[index].price.toString()}',
+                    fontSize: 20,
                     color: kPrimaryColor,
                   )
                 ],
@@ -131,7 +140,7 @@ Widget _bestSellingListView(BuildContext context) {
           );
         },
         separatorBuilder: (ctx, index) => SizedBox(
-              width: 30,
+              width: 15,
             ),
         itemCount: controller.productModels.length),
   );
@@ -159,34 +168,43 @@ Widget _categoriesListView(BuildContext context) {
         child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemBuilder: (ctx, index) {
-              return Column(
-                children: [
-                  Container(
-                    height: 60,
-                    width: 60,
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            blurRadius: 10,
-                            offset: Offset(0, 2),
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(60),
-                        color: Colors.white),
-                    child:
-                        Image.network(controller.categoryModels[index].image),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  FittedBox(
-                    child: CustomText(
-                      text: controller.categoryModels[index].name,
-                      fontSize: 14,
+              return InkWell(
+                onTap: () {
+                  Get.to(
+                    CategoryView(
+                      name: controller.categoryModels[index].name,
                     ),
-                  ),
-                ],
+                  );
+                },
+                child: Column(
+                  children: [
+                    Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              blurRadius: 10,
+                              offset: Offset(0, 2),
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(60),
+                          color: Colors.white),
+                      child:
+                          Image.network(controller.categoryModels[index].image),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    FittedBox(
+                      child: CustomText(
+                        text: controller.categoryModels[index].name,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
             separatorBuilder: (ctx, index) {

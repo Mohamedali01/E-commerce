@@ -32,7 +32,9 @@ class ControlView extends StatelessWidget {
                     items: [
                       BottomNavigationBarItem(
                         label: '',
-                        icon: Image.asset('assets/images/Icon_Explore.png'),
+                        icon: Tooltip(
+                            message: 'Explore',
+                            child: Image.asset('assets/images/Icon_Explore.png')),
                         activeIcon: Padding(
                           padding: const EdgeInsets.only(top: 10),
                           child: Column(
@@ -48,7 +50,9 @@ class ControlView extends StatelessWidget {
                       ),
                       BottomNavigationBarItem(
                         label: '',
-                        icon: Image.asset('assets/images/Icon_Cart.png'),
+                        icon: Tooltip(
+                            message: 'Cart',
+                            child: Image.asset('assets/images/Icon_Cart.png')),
                         activeIcon: Padding(
                           padding: const EdgeInsets.only(top: 10),
                           child: Column(
@@ -64,7 +68,9 @@ class ControlView extends StatelessWidget {
                       ),
                       BottomNavigationBarItem(
                         label: '',
-                        icon: Image.asset('assets/images/Path 5.png'),
+                        icon: Tooltip(
+                            message: 'Account',
+                            child: Image.asset('assets/images/Path 5.png')),
                         activeIcon: Padding(
                           padding: const EdgeInsets.only(top: 10.0),
                           child: Column(

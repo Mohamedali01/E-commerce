@@ -2,7 +2,7 @@ import 'package:e_commerce/helper/hex_color.dart';
 import 'package:flutter/material.dart';
 
 class ProductModel {
-  String productId, name, description, image, price, sized;
+  String productId, name, description, image, price, sized,category;
   Color color;
 
   ProductModel(

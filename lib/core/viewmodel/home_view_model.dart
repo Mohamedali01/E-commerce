@@ -22,6 +22,7 @@ class HomeViewModel with ChangeNotifier {
   }
 
   getCategories() async {
+
     _isLoading.value = true;
     List<QueryDocumentSnapshot> a = await HomeService().getCategories();
     List<CategoryModel> test = [];

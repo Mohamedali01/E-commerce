@@ -6,7 +6,12 @@
         android:label="e_commerce"
         android:icon="@mipmap/ic_launcher">
         <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
             android:name=".MainActivity"
+
             android:allowBackup="false"
             android:fullBackupOnly="false"
             android:launchMode="singleTop"

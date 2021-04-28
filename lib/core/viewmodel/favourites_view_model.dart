@@ -12,7 +12,10 @@ class FavouritesViewModel with ChangeNotifier {
 
   List<CartModel> get favourites => _favourites;
   List<ProductModel> _productModels = [];
-  bool _isLoading;
+  bool _isLoading = false;
+  bool _isFavourite = false;
+
+  bool get isFavourite => _isFavourite;
 
   bool get isLoading => _isLoading;
 
@@ -57,16 +60,12 @@ class FavouritesViewModel with ChangeNotifier {
     CartModel cartModel = _favourites[index];
     try {
       _favourites.removeAt(index);
+      _isFavourite = false;
       notifyListeners();
       FavouritesDatabase favouritesDatabase =
           FavouritesDatabase.favouritesDatabase;
       await favouritesDatabase.delete(id);
-      HomeService homeService = HomeService();
-      await favouritesDatabase.delete(id);
-      // await homeService.deleteFavouriteItem(id);
-
       Fluttertoast.showToast(msg: 'Item removed successfully');
-
     } catch (e) {
       Fluttertoast.showToast(msg: 'Error happened!');
       _favourites.insert(index, cartModel);
@@ -85,13 +84,36 @@ class FavouritesViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void clearFavourites(){
+  // in productDetailsView
+  void handleFavouriteButton(ProductModel productModel) {
+    _isFavourite = !_isFavourite;
+    notifyListeners();
+    if (_isFavourite) {
+      Fluttertoast.showToast(msg: 'Item added successfully');
+      _favourites.add(CartModel(
+          name: productModel.name,
+          image: productModel.image,
+          cartId: productModel.productId,
+          quantity: 1,
+          price: productModel.price));
+      notifyListeners();
+    } else {
+
+      _favourites
+          .removeWhere((element) => productModel.productId == element.cartId);
+      notifyListeners();
+      Fluttertoast.showToast(msg: 'Item removed successfully');
+
+    }
+  }
+
+  void clearFavourites() {
     _favourites = [];
     notifyListeners();
   }
+
   void update(List<ProductModel> list) {
     _productModels = list;
     notifyListeners();
   }
-
 }
