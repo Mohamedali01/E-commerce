@@ -1,5 +1,6 @@
 import 'package:e_commerce/constants.dart';
 import 'package:e_commerce/model/cart_model.dart';
+import 'package:e_commerce/model/favourite_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -17,16 +18,16 @@ class FavouritesDatabase {
       Database db =
           await openDatabase(path, version: 1, onCreate: (dataB, _) async {
         await dataB.execute(
-            "CREATE TABLE $favouriteTable ( $favouriteId TEXT NOT NULL, $favouriteName TEXT NOT NULL, $favouriteImage TEXT NOT NULL, $favouritePrice TEXT NOT NULL, $favouriteQuantity INTEGER NOT NULL)");
+            "CREATE TABLE $favouriteTable ( $favouriteId TEXT NOT NULL, $favouriteName TEXT NOT NULL, $favouriteImage TEXT NOT NULL, $favouritePrice TEXT NOT NULL,$favouriteIsFavourite TEXT NOT NULL)");
       });
       _database = db;
       return _database;
     }
   }
 
-  Future<void> insert(CartModel cartModel) async {
+  Future<void> insert(FavouriteModel favouriteModel) async {
     Database dbHelper = await database;
-    await dbHelper.insert(favouriteTable, cartModel.toJson(),
+    await dbHelper.insert(favouriteTable, favouriteModel.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
@@ -36,22 +37,20 @@ class FavouritesDatabase {
         .delete(favouriteTable, where: '$favouriteId = ?', whereArgs: [id]);
   }
 
-  Future<List<CartModel>> query() async {
+  Future<List<FavouriteModel>> query() async {
     Database dbHelper = await database;
     List list = await dbHelper.query(favouriteTable);
-    return list.map((e) => CartModel.fromJson(e)).toList();
+    return list.map((e) => FavouriteModel.fromJson(e)).toList();
   }
-  Future<void> clear()async{
+
+  Future<void> clear() async {
     Database dbHelper = await database;
     await dbHelper.delete(favouriteTable);
   }
 
-
-
-// Future<void> update(CartModel cartModel)async{
-//   Database dbHelper = await database;
-//   await dbHelper.update(favouriteTable, cartModel.toJson(),where: '$favouriteId = ?',whereArgs: [cartModel.cartId]);
-//
-// }
-
+  Future<void> update(FavouriteModel favouriteModel) async {
+    Database dbHelper = await database;
+    await dbHelper.update(favouriteTable, favouriteModel.toJson(),
+        where: '$favouriteId = ?', whereArgs: [favouriteModel.favId]);
+  }
 }

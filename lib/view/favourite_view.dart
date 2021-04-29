@@ -95,13 +95,13 @@ class FavouriteView extends StatelessWidget {
                                   ),
                                   onDismissed: (dismissDirection) {
                                     controller.removeFavourite(
-                                        controller.favourites[index].cartId);
+                                        controller.favourites[index].favId);
                                   },
                                   key: ValueKey(DateTime.now().toString()),
                                   child: InkWell(
                                     onTap: () {
                                       controller.pressItem(
-                                          controller.favourites[index].cartId);
+                                          controller.favourites[index].favId);
                                     },
                                     child: Container(
                                       height: 120,

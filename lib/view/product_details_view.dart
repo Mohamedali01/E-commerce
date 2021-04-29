@@ -33,8 +33,8 @@ class ProductDetailsView extends StatelessWidget {
                   ),
                   Positioned(
                     child: InkWell(
-                      onTap: () {
-                        controller.handleFavouriteButton(model);
+                      onTap: () async {
+                        await controller.handleFavouriteButton(model);
                       },
                       child: Container(
                         width: 50,
@@ -44,7 +44,7 @@ class ProductDetailsView extends StatelessWidget {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: Icon(
-                          controller.isFavourite
+                          controller.getFavourite(model.productId)
                               ? Icons.star
                               : Icons.star_border,
                           color: Colors.black,

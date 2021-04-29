@@ -1,6 +1,7 @@
 import 'package:e_commerce/constants.dart';
 import 'package:e_commerce/core/viewmodel/cart_view_model.dart';
 import 'package:e_commerce/core/viewmodel/favourites_view_model.dart';
+import 'package:e_commerce/model/favourite_model.dart';
 import 'package:e_commerce/view/checkout/check_out_view.dart';
 import 'package:e_commerce/view/widgets/custom_button.dart';
 import 'package:e_commerce/view/widgets/custom_text.dart';
@@ -95,7 +96,16 @@ class CartView extends StatelessWidget {
                                     if (dismissDirection ==
                                         DismissDirection.startToEnd)
                                       await favouritesController.addFavourite(
-                                          controller.cartProducts[index]);
+                                          FavouriteModel(
+                                              name: controller
+                                                  .cartProducts[index].name,
+                                              image: controller
+                                                  .cartProducts[index].image,
+                                              price: controller
+                                                  .cartProducts[index].price,
+                                              favId: controller
+                                                  .cartProducts[index].cartId,
+                                              isFavourite: true));
                                   },
                                   key: ValueKey(DateTime.now().toString()),
                                   child: InkWell(

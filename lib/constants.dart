@@ -11,11 +11,12 @@ final String columnQuantity = 'quantity';
 
 //FavouritesTable
 final String favouriteTable = 'favourite';
-final String favouriteId = 'cartId';
+final String favouriteId = 'favId';
 final String favouriteName = 'name';
 final String favouriteImage = 'image';
 final String favouritePrice = 'price';
-final String favouriteQuantity = 'quantity';
+final String favouriteIsFavourite = 'isFavourite';
+
 
 const String PROFILE_LOCAL_DATA_KEY = 'PROFILE_LOCAL_DATA_KEY';
 const String AUTH_LOCAL_DATA_KEY = 'AUTH_LOCAL_DATA_KEY';

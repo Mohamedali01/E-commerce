@@ -1,6 +1,6 @@
-import 'package:e_commerce/core/services/home_service.dart';
 import 'package:e_commerce/helper/database/favourites_database.dart';
 import 'package:e_commerce/model/cart_model.dart';
+import 'package:e_commerce/model/favourite_model.dart';
 import 'package:e_commerce/model/product_model.dart';
 import 'package:e_commerce/view/product_details_view.dart';
 import 'package:flutter/material.dart';
@@ -8,14 +8,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 class FavouritesViewModel with ChangeNotifier {
-  List<CartModel> _favourites = [];
+  List<FavouriteModel> _favourites = [];
 
-  List<CartModel> get favourites => _favourites;
+  List<FavouriteModel> get favourites => _favourites;
   List<ProductModel> _productModels = [];
   bool _isLoading = false;
-  bool _isFavourite = false;
-
-  bool get isFavourite => _isFavourite;
 
   bool get isLoading => _isLoading;
 
@@ -29,10 +26,10 @@ class FavouritesViewModel with ChangeNotifier {
     Get.to(ProductDetailsView(model: productModel));
   }
 
-  Future<void> addFavourite(CartModel cartModel) async {
+  Future<void> addFavourite(FavouriteModel favouriteModel) async {
     bool find = false;
     for (int i = 0; i < _favourites.length; i++) {
-      if (cartModel.cartId == _favourites[i].cartId) {
+      if (favouriteModel.favId == _favourites[i].favId) {
         find = true;
         Fluttertoast.showToast(msg: 'Item already exists in  favourites!');
         notifyListeners();
@@ -40,12 +37,12 @@ class FavouritesViewModel with ChangeNotifier {
     }
     if (find == false) {
       try {
-        _favourites.add(cartModel);
+        _favourites.add(favouriteModel);
         notifyListeners();
         Fluttertoast.showToast(msg: 'Item added successfully!');
         FavouritesDatabase favouritesDatabase =
             FavouritesDatabase.favouritesDatabase;
-        await favouritesDatabase.insert(cartModel);
+        await favouritesDatabase.insert(favouriteModel);
       } catch (e) {
         Fluttertoast.showToast(msg: 'Error happened!');
         _favourites.removeAt(_favourites.length - 1);
@@ -56,11 +53,11 @@ class FavouritesViewModel with ChangeNotifier {
   }
 
   Future<void> removeFavourite(String id) async {
-    int index = _favourites.indexWhere((element) => element.cartId == id);
-    CartModel cartModel = _favourites[index];
+    int index = _favourites.indexWhere((element) => element.favId == id);
     try {
+      _favourites[index].isFavourite = false;
+      notifyListeners();
       _favourites.removeAt(index);
-      _isFavourite = false;
       notifyListeners();
       FavouritesDatabase favouritesDatabase =
           FavouritesDatabase.favouritesDatabase;
@@ -68,7 +65,6 @@ class FavouritesViewModel with ChangeNotifier {
       Fluttertoast.showToast(msg: 'Item removed successfully');
     } catch (e) {
       Fluttertoast.showToast(msg: 'Error happened!');
-      _favourites.insert(index, cartModel);
       notifyListeners();
     }
   }
@@ -78,42 +74,57 @@ class FavouritesViewModel with ChangeNotifier {
     notifyListeners();
     FavouritesDatabase favouritesDatabase =
         FavouritesDatabase.favouritesDatabase;
-    List<CartModel> list = await favouritesDatabase.query();
+    List<FavouriteModel> list = await favouritesDatabase.query();
     _favourites = list;
     _isLoading = false;
     notifyListeners();
   }
 
   // in productDetailsView
-  void handleFavouriteButton(ProductModel productModel) {
-    _isFavourite = !_isFavourite;
-    notifyListeners();
-    if (_isFavourite) {
-      Fluttertoast.showToast(msg: 'Item added successfully');
-      _favourites.add(CartModel(
+  Future<void> handleFavouriteButton(ProductModel productModel) async {
+    bool find = false;
+    for (int i = 0; i < _favourites.length; i++) {
+      if (_favourites[i].favId == productModel.productId) {
+        find = true;
+        break;
+      }
+    }
+    if (find == false) {
+      await addFavourite(FavouriteModel(
           name: productModel.name,
-          image: productModel.image,
-          cartId: productModel.productId,
-          quantity: 1,
-          price: productModel.price));
-      notifyListeners();
+          isFavourite: true,
+          favId: productModel.productId,
+          price: productModel.price,
+          image: productModel.image));
     } else {
-
-      _favourites
-          .removeWhere((element) => productModel.productId == element.cartId);
-      notifyListeners();
-      Fluttertoast.showToast(msg: 'Item removed successfully');
-
+      await removeFavourite(productModel.productId);
     }
   }
 
-  void clearFavourites() {
+  Future<void> clearFavourites() async {
     _favourites = [];
     notifyListeners();
+    FavouritesDatabase favouritesDatabase =
+        FavouritesDatabase.favouritesDatabase;
+    await favouritesDatabase.clear();
   }
 
   void update(List<ProductModel> list) {
     _productModels = list;
     notifyListeners();
+  }
+
+  bool getFavourite(String id) {
+    bool find = false;
+    for (int i = 0; i < _favourites.length; i++) {
+      if (_favourites[i].favId == id) {
+        find = true;
+        break;
+      }
+    }
+    if (find)
+      return true;
+    else
+      return false;
   }
 }

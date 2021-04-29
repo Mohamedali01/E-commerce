@@ -24,8 +24,10 @@ class CartViewModel with ChangeNotifier {
     getAllProducts();
   }
 
-  void clearCartProducts(){
+  Future<void> clearCartProducts()async{
     _cartProducts = [];
+    CartDatabase cartDatabase = CartDatabase.db;
+   await cartDatabase.clear();
     notifyListeners();
   }
   Future<void> insertCartItem(CartModel cartModel) async {

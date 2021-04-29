@@ -14,7 +14,6 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
-
 class AccountViewModel with ChangeNotifier {
   UserModel _userModel;
 
@@ -60,8 +59,8 @@ class AccountViewModel with ChangeNotifier {
       await favouritesDatabase.clear();
       print('Mohamed Ali favourite data deleted');
       notifyListeners();
-cartProvider1.clearCartProducts();
-favProvider1.clearFavourites();
+      await cartProvider1.clearCartProducts();
+      await favProvider1.clearFavourites();
       if (whichLogIn == AUTH_GOOGLE) await GoogleSignIn().signOut();
       print('Mohamed Ali google');
       if (whichLogIn == AUTH_FACEBOOK) await FacebookLogin().logOut();
@@ -71,7 +70,6 @@ favProvider1.clearFavourites();
       _isLoading = false;
       notifyListeners();
       Get.offAll(LoginView());
-
     } catch (e) {
       Get.snackbar('Error!', 'Error happened',
           snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
