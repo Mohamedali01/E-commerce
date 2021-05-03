@@ -13,4 +13,10 @@ class AuthService {
     DocumentSnapshot data = await _collectionReference.doc(uid).get();
     return data;
   }
+
+  Future<void> updateUserData(UserModel userModel)async{
+    await _collectionReference.doc(userModel.userId).update(userModel.toJson());
+  }
+
+
 }

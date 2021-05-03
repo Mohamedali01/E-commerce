@@ -1,4 +1,4 @@
-import 'package:e_commerce/view/account_view.dart';
+import 'file:///C:/flutterProjects/e_commerce/lib/view/profile/account_view.dart';
 import 'package:e_commerce/view/cart_view.dart';
 import 'package:e_commerce/view/home_view.dart';
 import 'package:flutter/material.dart';

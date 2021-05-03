@@ -4,6 +4,7 @@
 
     <application
         android:label="e_commerce"
+        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"

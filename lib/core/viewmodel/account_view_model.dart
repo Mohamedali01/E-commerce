@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:e_commerce/constants.dart';
-import 'package:e_commerce/core/viewmodel/cart_view_model.dart';
 import 'package:e_commerce/helper/database/cart_database.dart';
 import 'package:e_commerce/helper/database/favourites_database.dart';
 import 'package:e_commerce/helper/database/sharedPref/account_local_data.dart';
@@ -12,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountViewModel with ChangeNotifier {
   UserModel _userModel;
@@ -68,6 +69,10 @@ class AccountViewModel with ChangeNotifier {
       await _firebaseAuth.signOut();
       print('Mohamed Ali sign out successfully');
       _isLoading = false;
+      notifyListeners();
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      await sharedPreferences.clear();
       notifyListeners();
       Get.offAll(LoginView());
     } catch (e) {

@@ -1,7 +1,10 @@
 import 'package:e_commerce/core/viewmodel/account_view_model.dart';
+import 'package:e_commerce/core/viewmodel/auth_view_model.dart';
 import 'package:e_commerce/view/circular_progress_indicator_view.dart';
+import 'package:e_commerce/view/profile/edit_account_view.dart';
 import 'package:e_commerce/view/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class AccountView extends StatefulWidget {
@@ -13,6 +16,7 @@ class _AccountViewState extends State<AccountView> {
   @override
   Widget build(BuildContext context) {
     final accountController = Provider.of<AccountViewModel>(context);
+    final authController = Provider.of<AuthViewModel>(context);
     return (accountController.isLoading)
         ? CircularProgressIndicatorView()
         : Scaffold(
@@ -26,25 +30,33 @@ class _AccountViewState extends State<AccountView> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Container(
-                            width: 140,
-                            height: 140,
-                            decoration: BoxDecoration(
+                            width: 150,
+                            height: 150,
+                            color: Colors.transparent,
+                            child: ClipRRect(
                               borderRadius: BorderRadius.circular(100),
-                              color: Colors.red,
-                              image: DecorationImage(
-                                image: AssetImage('assets/images/Avatar.png'),
+                              child: Container(
+                                width: 120,
+                                height: 120,
+                                child: authController.image == null
+                                    ? Image.asset('assets/images/Avatar.png',
                                 fit: BoxFit.fill,
+                                )
+                                    : Image.file(
+                                        authController.image,
+                                        fit: BoxFit.fill,
+                                      ),
                               ),
                             ),
                           ),
                           Column(
                             children: [
                               Container(
-                                width: MediaQuery.of(context).size.width * 0.6,
+                                width: MediaQuery.of(context).size.width * 0.5,
                                 child: Align(
                                   alignment: Alignment.topCenter,
                                   child: Text(
-                                    accountController.userModel.name,
+                                    authController.name,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontSize: 30,
@@ -59,7 +71,7 @@ class _AccountViewState extends State<AccountView> {
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.6,
                                 child: Text(
-                                  accountController.userModel.email,
+                                  authController.email,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 18,
@@ -72,22 +84,25 @@ class _AccountViewState extends State<AccountView> {
                         ],
                       ),
                       SizedBox(
-                        height: 100,
+                        height: 40,
                       ),
                       _profileItemWidget('Edit Profile',
-                          'assets/profileIcons/Icon_Edit-Profile.png'),
+                          'assets/profileIcons/Icon_Edit-Profile.png', () {
+                        print('Mohamed Ali Edit Account pressed');
+                        Get.to(EditAccountView());
+                      }),
                       _profileItemWidget('Shipping Address',
-                          'assets/profileIcons/Icon_Location.png'),
+                          'assets/profileIcons/Icon_Location.png', () {}),
                       _profileItemWidget('Order History',
-                          'assets/profileIcons/Icon_History.png'),
-                      _profileItemWidget(
-                          'Cards', 'assets/profileIcons/Icon_Payment.png'),
+                          'assets/profileIcons/Icon_History.png', () {}),
+                      _profileItemWidget('Cards',
+                          'assets/profileIcons/Icon_Payment.png', () {}),
                       _profileItemWidget('Notifications',
-                          'assets/profileIcons/Icon_Alert.png'),
+                          'assets/profileIcons/Icon_Alert.png', () {}),
                       _profileItemWidget(
                         'Log Out',
                         'assets/profileIcons/Icon_Exit.png',
-                        onTap: () async {
+                        () async {
                           await accountController.signOut();
                         },
                       ),
@@ -100,7 +115,7 @@ class _AccountViewState extends State<AccountView> {
   }
 }
 
-_profileItemWidget(String text, String icon, {Function onTap}) {
+_profileItemWidget(String text, String icon, Function onTap) {
   return Column(
     children: [
       GestureDetector(

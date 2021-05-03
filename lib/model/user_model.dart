@@ -11,11 +11,12 @@ class UserModel {
     if (map == null)
       return;
     else {
+
       userId = map['userId'];
       name = map['name'];
       email = map['email'];
       pic = map['pic'];
-      isAdmin = map['isAdmin'];
+      isAdmin = map['isAdmin'].toString().toLowerCase() == 'true';
     }
   }
 
@@ -25,7 +26,7 @@ class UserModel {
       'name': name,
       'email': email,
       'pic': pic,
-      'isAdmin': isAdmin
+      'isAdmin': isAdmin.toString()
     };
   }
 }
